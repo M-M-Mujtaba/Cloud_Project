@@ -14,6 +14,7 @@ app.use(cors({ origin: true }));
 app.listen(HTTP_PORT, () => {
     console.log("Server running on port %PORT%".replace("%PORT%", HTTP_PORT))
 });
+// get all employees from database
 // Root endpoint
 app.get("/Employees", (req, res, next) => {
     var user_list = []
@@ -37,179 +38,201 @@ app.get("/Employees", (req, res, next) => {
 
     // res.json({"message":"Ok"})
 });
+// get all attendance of an employe from database
+app.get("/Attendance/:username", (req, res, next) => {
+    var user_list = []
 
+    db.Database.serialize(() => {
 
-app.post("/time", (req, res) => {
-    console.log(req.body.data['user'], typeof req.body.data['stime'], req.body.data['pkgID'], req.body.data['stat']);
-    if (req.body.data['stat'] === 1) {
-        var quer = "UPDATE Deliveries SET Employee_ID =? , Start_Time =?, Status=? WHERE Package_ID = ?";
-        db.con.query(quer, [req.body.data['user'], req.body.data['stime'], req.body.data['stat'], req.body.data['pkgID']], function (error, results, fields) {
-            if (error) {
-                res.status(400).json({ "error": error.message });
+        db.Database.all(`SELECT att_date, attendance from attendance_info where username = ?` ,[req.params["username"]] , (err,result) => {
+            if (err) {
+                res.status(400).json({ "error": err.message });
+                console.log(err)
                 return;
             }
-            console.log(results);
-            console.log(results.message);
-            res.header("Access-Control-Allow-Origin", "*");
-            res.status(200).json({ "results": results });
-        });
-    }
-    else if (req.body.data['stat'] === 2) {
-        var quer = "UPDATE Deliveries SET Employee_ID =? , End_Time =?, Status=? WHERE Package_ID = ?";
-        db.con.query(quer, [req.body.data['user'], req.body.data['stime'], req.body.data['stat'], req.body.data['pkgID']], function (error, results, fields) {
-            if (error) {
-                res.status(400).json({ "error": error.message });
+            else if (result.length == 0) {
+                res.status(400).json({ "error": "No records found" });
+                console.log("No Record found")
                 return;
+            } else {
+                            //console.log(typeof result);
+                //user_list.push(result)
+                console.log(req.params)
+                res.status(200).json({"results": result})
+                
             }
-            console.log(results);
-            console.log(results.message);
-            res.header("Access-Control-Allow-Origin", "*");
-            res.status(200).json({ "results": results });
+
+
         });
-    }
-
-
-});
-
-app.post("/Attendance", (req, res, next) => {
-    console.log(req.body);
-    db.con.query('SELECT * from Attendence WHERE EmployeeID=?',[req.body.userid], function (error, results, fields) {
-        if (error) {
-            console.log("error in attendance query")
-            res.status(400).json({ "error": error.message });
-            return;
-        }
-        console.log("query worked")
-        res.header("Access-Control-Allow-Origin", "*")
-        res.status(200).json({ "Data": results });
+        //res.status(200).json({ "results": user_list});
     });
+    //res.header("Access-Control-Allow-Origin", "*");
+
+
     // res.json({"message":"Ok"})
 });
 
-app.post("/login", (req, res, next) => {
-    console.log(req.body.email);
-    db.con.query('SELECT * from Employees WHERE email=?', [req.body.email], function (error, results, fields) {
-        if (error) {
-            res.status(400).json({ "error": error.message });
-            return;
-        }
-        let user = results[0]
-        if(user['pswd'] !== req.body.password){
-            res.status(400).json({"ERROR": "Password is incorrect!"});
-            return;
-        }
-        const token = jwt.sign({ID: user.ID}, "shfailsfhabsk")
-        console.log(user.EmployeeType)
-        res.header("Access-Control-Allow-Origin", "*")
-        res.status(200).json({ "user": user , "token": token });
-       
+app.put("/mark_attendance", (req, res) => {
+
+    today_date =  db.today.getDate() + '-' + (db.today.getMonth() + 1) + '-' + db.today.getFullYear();
+
+    db.Database.serialize(() => { 
+
+        db.Database.run(`update attendance_info set attendance = ? where att_date = ? and username = ?` ,["P", today_date, req.body["username"]] , (err,result) => {
+
+            if (err) {
+                res.status(400).json({ "error": err.message });
+                console.log(req.body)
+                return;
+            }
+             else {
+                            //console.log(typeof result);
+                //user_list.push(result)
+                console.log(req.body)
+                res.status(200).json({"results": "success"})
+                
+            }
+
+        });
+
+
+
     });
+
 
 });
 
-// app.post("/mark", (req, res, next) => {
-//     console.log(req.body)
-//     db.con.query('INSERT INTO Attendence SET Status=? ,Date =?, Time=? , EmployeeID=?', 
-//         ['P','2020/12/19', req.body.time, req.body.uid], function (error, results, fields) {
-//         if (error) {
-//             console.log("ERROR")
-//             res.status(400).json({ "error": error.message });
-//             return;
-//         }
-//         console.log(results);
-//         res.header("Access-Control-Allow-Origin", "*")
-//         res.status(200).json({"Message": "Success"});
-       
-//     });
+app.get("/start_day", (req, res) => {
 
-// });
+    db.today.setDate(db.today.getDate() + 1)
+    today_date =  db.today.getDate() + '-' + (db.today.getMonth() + 1) + '-' + db.today.getFullYear();
+    
 
-// app.get("/getattendance",(req,res,next) => {
-//     db.con.query('SELECT * FROM Attendence WHERE EmployeeID=?' ,[req.body.uid], function (error,results,fields){
-//         if(error){
-//             res.status(400).json({"error":error.message});
-//             return;
-//         }
-//         console.log(results);
-//         res.header("Access-Control-Allow-Origin", "*");
-//         res.status(200).json({"Message": "Success", "status":results[0]})
-//     })
+    
+    db.Database.serialize(() => { 
 
-// });
+        db.Database.each(`SELECT username from user` , (err,result) => {
+            if (err) {
+                res.status(400).json({ "error": err.message });
+                console.log("failed to get employees for adding new attendance")
+                return;
+            }
+            else{
+                db.Database.run(`insert into attendance_info values(?, ?, ?)` ,[result.username, today_date,"A" ], (error,output) => {
 
-// app.get("/getatten", (req, res, next) => {
-//     console.log(req.body);
-//     console.log(req.params);
-//     console.log(req.query);
-//     db.con.query('SELECT * FROM Attendence WHERE EmployeeID=?', 
-//         [ req.body.uid], function (error, results, fields) {
-//         if (error) {
-//             res.status(400).json({ "error": error.message });
-//             return;
-//         }
-//         console.log(results);
-//         res.header("Access-Control-Allow-Origin", "*");
-//         res.status(200).json({"Message": "Success","status": results[0]});
-       
-//     });
+                    if (error) {
+                        res.status(400).json({ "error": error.message });
+                        console.log(error)
+                        return;
+                    }
+                     else {
+                                    //console.log(typeof result);
+                        //user_list.push(result)
+                        console.log(output)
+                        
+                    }
+        
+                });
+        
 
-// });
+            }
 
-// Insert here other API endpoints
-app.get("/api/users", (req, res, next) => {
-    var sql = "select * from user"
-    var params = []
-    res.json({ "message": "pls work" })
-    db.all(sql, params, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
+            //console.log(typeof result);
+            //user_list.push(result)
+            
+        });
+
+        
+        res.status(200).json({"results": "success"})
+
+    });
+
+
+});
+
+app.post("/user_login", (req, res, next) => {
+
+    console.log(req.body["username"])
+    db.Database.serialize(() => { 
+
+        db.Database.each(`select password from user where  username = ? ` ,[req.body["username"]] , (err,result) => {
+
+            if (err) {
+                res.status(400).json({ "error": err.message });
+                console.log(req.body)
+                return;
+            }
+            else if (result.length == 0) {
+                res.status(400).json({ "error": "user not found" });
+                console.log("No Record found")
+                return;
+            }
+             else {
+                            //console.log(typeof result);
+                //user_list.push(result)
+                //console.log(req.body)
+                if (result["password"] != req.body["password"]){
+                    res.status(400).json({ "error": "Incorrect Password" });
+                    return;
+                }
+                const token = jwt.sign({ID: req.body["username"]}, "shfailsfhabsk");
+                res.status(200).json({"results": "success", "token":token})
+                
+            }
+
+        });
+    
+
     });
 });
 
-app.post("/mark", (req, res, next) => {
+app.post("/admin_login", (req, res, next) => {
+
     console.log(req.body)
-    db.con.query('UPDATE Attendence SET Status=? WHERE _Date=?', 
-        ['P','2012-08-19'], function (error, results, fields) {
-        if (error) {
-            console.log("ERROR IN MARK")
-            res.status(400).json({ "error": error.message });
-            return;
-        }
-        console.log(results);
-        console.log("LEAVING MARK ")
-        res.header("Access-Control-Allow-Origin", "*")
-        res.status(200).json({"Message": "Success"});
-       
-    });
+    db.Database.serialize(() => { 
 
+        db.Database.all(`select password from admin inner join user on admin.admin_name = user.username where admin_name = ? ` ,[req.body["username"]] , (err,result) => {
+            console.log(result)
+            if (err) {
+
+                res.status(400).json({ "error": err.message });
+                console.log(req.body)
+                return;
+            }
+            else if (result.length == 0) {
+                console.log("here1");
+                res.status(400).json({ "error": "admin not found" });
+                console.log("No Record found")
+                return;
+            }
+             else {
+
+                            //console.log(typeof result);
+                //user_list.push(result)
+                result = result[0]
+                console.log(req.body)
+                if (result["password"] != req.body["password"]){
+                    res.status(400).json({ "error": "Incorrect Password" });
+                    return;
+                }
+                const token = jwt.sign({ID: req.body["username"]}, "shfailsfhabsk");
+                res.status(200).json({"results": "success", "token":token})
+                return
+                
+            }
+
+
+        });
+    
+
+    });
 });
 
-app.post("/getattendance",(req,res,next) => {
-    console.log("INSIDE GET ATTENDANCE SERVER")
-    console.log( req.body.time, req.body.uid)
-    db.con.query('INSERT INTO Attendence SET Status=? ,_Date =?, Time=? , EmployeeID=?', 
-    ['A','2012/08/19', req.body.time, req.body.uid], function (error, results, fields) {
-    if (error) {
-        console.log("ERROR IN GET ATTENDANCE")
-        res.status(400).json({ "error": error.message });
-        return;
-    }
-    console.log(results);
-    res.header("Access-Control-Allow-Origin", "*")
-    res.status(200).json({"Message": "Success","status": results});
-    });
 
-});
 
 // Default response for any other request
 app.use(function (req, res) {
     res.status(404);
-    //res.json({"message": "wronge page"})
+
 });
 

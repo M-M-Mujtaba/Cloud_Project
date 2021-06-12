@@ -31,3 +31,5 @@ let db = new sqlite3.Database('./EMP_DB.db', sqlite3.OPEN_READWRITE, (err) => {
 //   //console.log(user_list)
 // });
 exports.Database = db;
+exports.today = new Date();
+console.log(this.today)
