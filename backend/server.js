@@ -15,15 +15,26 @@ app.listen(HTTP_PORT, () => {
     console.log("Server running on port %PORT%".replace("%PORT%", HTTP_PORT))
 });
 // Root endpoint
-app.get("/Deliveries", (req, res, next) => {
-    db.con.query('SELECT * from Deliveries', function (error, results, fields) {
-        if (error) {
-            res.status(400).json({ "error": error.message });
-            return;
-        }
-        res.header("Access-Control-Allow-Origin", "*")
-        res.status(200).json({ "Data": results });
+app.get("/Employees", (req, res, next) => {
+    var user_list = []
+
+    db.Database.serialize(() => {
+
+        db.Database.all(`SELECT * from user` , (err,result) => {
+            if (err) {
+                res.status(400).json({ "error": err.message });
+                return;
+            }
+
+            //console.log(typeof result);
+            //user_list.push(result)
+            res.status(200).json({"results": result})
+        });
+        //res.status(200).json({ "results": user_list});
     });
+    //res.header("Access-Control-Allow-Origin", "*");
+
+
     // res.json({"message":"Ok"})
 });
 

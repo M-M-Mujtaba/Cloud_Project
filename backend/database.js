@@ -1,70 +1,33 @@
-var sql = require('mysql')
-var md5 = require('md5')
-var Cred = require('./cred')
+const sqlite3 = require('sqlite3');
 
-var connection = sql.createConnection(Cred.CRED);
-
-
-connection.connect(function(err) {
-    if (err) {
-        console.error('error connecting: ' + err);
-        return;
-    }
-    console.log('connected as id ' + connection.threadId);
+// open the database
+let db = new sqlite3.Database('./EMP_DB.db', sqlite3.OPEN_READWRITE, (err) => {
+  if (err) {
+    console.error(err.message);
+  }
+  console.log('Connected to the chinook database.');
 });
+// var user_list = []
 
-// connection.query("CREATE TABLE Deliveries" , function (error, results, fields) {
-//       if (error) throw error;
-//       console.log(results);
-//     });
-// connection.query("UPDATE Deliveries SET Status = 0 WHERE PackageID = 1" , function (error, results, fields) {
-//         if (error) throw error;
-//         console.log(results);
-//     });
-// connection.query("UPDATE Deliveries SET Status = 0 WHERE PackageID = 6" , function (error, results, fields) {
-//     if (error) throw error;
-//     console.log(results);
-//    });
-// connection.query('INSERT INTO Deliveries SET ?', {Address: 'testing', Status: 0, 'PackageID': 1, 'Employee_ID': 1}, function (error, results, fields) {
-//   if (error) throw error;
-//   console.log(results.insertId);
-// });
-// connection.query('INSERT INTO Deliveries SET ?', {Address: 'testing2', Status: 0, 'PackageID':6 ,'Employee_ID': 0}, function (error, results, fields) {
-//     if (error) throw error;
-//     console.log(results.insertId);
-//   });
+// db.serialize(() => {
 
-// connection.query('INSERT INTO Deliveries SET ?', {Address: 'testing2', Status: 2, 'PackageID': 7,'Employee_ID': 0}, function (error, results, fields) {
-//   if (error) throw error;
-//   console.log(results.insertId);
-// });
-
-
-// connection.query('SELECT * from Attendence', function (error, results, fields) {
-//     if (error) throw error;
-//     console.log('The Delivery is: ', results);
-//   });
-
-// connection.query('INSERT INTO Deliveries SET ?', {Address: 'testing', Status: 'P', 'Package ID': 1}, function (error, results, fields) {
-//   if (error) throw error;
-//   console.log(results.insertId);
-// });
-
-// connection.query('INSERT INTO Attendence SET ?', { 'EmployeeID': 10, Date: "2000/12/27", Status: 'A', Time: "10:14am" }, function (error, results, fields) {
-//     if (error) {
-//         console.log("ERROR INSERTING EMP")
-//         throw error;
+//   db.each(`SELECT * from user` , (err,result) => {
+//     if (err) {
+//       console.error(err.message);
 //     }
-//     console.log(results.results);
+
+//     //console.log(typeof result);
+//     user_list.push(result)
+
+//   });
+//   console.log(user_list)
 // });
 
-// connection.query('SELECT * from Employees', function (error, results, fields) {
-//     if (error) throw error;
-//     console.log('The Delivery is: ', results);
-//   });
-
-
-
-exports.con = connection;
-
-
+// db.close((err) => {
+//   if (err) {
+//     console.error(err.message);
+//   }
+//   console.log('Close the database connection.');
+//   //console.log(user_list)
+// });
+exports.Database = db;
