@@ -16,7 +16,7 @@ app.listen(HTTP_PORT, () => {
 });
 // get all employees from database
 // Root endpoint
-app.get("/Employees", (req, res, next) => {
+app.get("/employees", (req, res, next) => {
     var user_list = []
 
     db.Database.serialize(() => {
@@ -39,7 +39,7 @@ app.get("/Employees", (req, res, next) => {
     // res.json({"message":"Ok"})
 });
 // get all attendance of an employe from database
-app.get("/Attendance/:username", (req, res, next) => {
+app.get("/attendance/:username", (req, res, next) => {
     var user_list = []
 
     db.Database.serialize(() => {
@@ -228,7 +228,95 @@ app.post("/admin_login", (req, res, next) => {
     });
 });
 
+app.put("/update_emp", (req, res, next) => {
+    var user_list = []
 
+    db.Database.serialize(() => {
+        for (const [key, value] of Object.entries(req.body)) {
+            
+
+            if (key != "username"){
+                if (key == "fname"){
+
+                    db.Database.run(`update user set fname = ? where username = ?` , [ value, req.body["username"]], (err,result) => {
+                        if (err) {
+                            console.log(err.message );
+                            res.status(400).json({ "error": err.message });
+                            return;
+                        }
+            
+                        //console.log(typeof result);
+                        //user_list.push(result)
+                    
+                    });
+                }else if (key == "lname"){
+                    db.Database.run(`update user set lname = ? where username = ?` , [ value, req.body["username"]], (err,result) => {
+                        if (err) {
+                            console.log(err.message );
+                            res.status(400).json({ "error": err.message });
+                            return;
+                        }
+
+                    });
+
+
+
+                }else if (key == "password"){
+                    db.Database.run(`update user set password = ? where username = ?` , [ value, req.body["username"]], (err,result) => {
+                        if (err) {
+                            console.log(err.message );
+                            res.status(400).json({ "error": err.message });
+                            return;
+                        }
+
+                    });
+
+
+
+                }else if (key == "designation"){
+                    db.Database.run(`update user set designation = ? where username = ?` , [ value, req.body["username"]], (err,result) => {
+                        if (err) {
+                            console.log(err.message );
+                            res.status(400).json({ "error": err.message });
+                            return;
+                        }
+
+                    });
+
+
+
+                }else if (key == "salary"){
+                    db.Database.run(`update user set salary = ? where username = ?` , [ value, req.body["username"]], (err,result) => {
+                        if (err) {
+                            console.log(err.message );
+                            res.status(400).json({ "error": err.message });
+                            return;
+                        }
+
+                    });
+                
+
+
+
+                }
+                else {
+                    res.status(400).json({ "error": "Invalid Column name" });
+                    return;
+                }
+            }
+
+
+
+          }
+        res.status(200).json({"results": "success"})
+        //res.status(200).json({ "results": user_list});
+
+    });
+    //res.header("Access-Control-Allow-Origin", "*");
+
+    
+    // res.json({"message":"Ok"})
+});
 
 // Default response for any other request
 app.use(function (req, res) {
