@@ -317,6 +317,51 @@ app.put("/update_emp", (req, res, next) => {
     
     // res.json({"message":"Ok"})
 });
+app.post("/add_employees", (req, res, next) => {
+    var user_list = []
+
+    db.Database.serialize(() => {
+
+        db.Database.run(`insert into user values(?, ?, ?, ?, ?, ?)`,[req.body["username"], req.body["password"], req.body["fname"], req.body["lname"], req.body["salary"], req.body["designation"]] , (err,result) => {
+            if (err) {
+                res.status(400).json({ "error": err.message });
+                return;
+            }
+
+            //console.log(typeof result);
+            //user_list.push(result)
+            res.status(200).json({"results": "success"})
+        });
+        //res.status(200).json({ "results": user_list});
+    });
+    //res.header("Access-Control-Allow-Origin", "*");
+
+
+    // res.json({"message":"Ok"})
+});
+
+app.delete("/delete_employees", (req, res, next) => {
+    var user_list = []
+
+    db.Database.serialize(() => {
+
+        db.Database.run(`delete from user where username = ?` , [req.body["username"]] ,  (err,result) => {
+            if (err) {
+                res.status(400).json({ "error": err.message });
+                return;
+            }
+
+            //console.log(typeof result);
+            //user_list.push(result)
+            res.status(200).json({"results": "success"})
+        });
+        //res.status(200).json({ "results": user_list});
+    });
+    //res.header("Access-Control-Allow-Origin", "*");
+
+
+    // res.json({"message":"Ok"})
+});
 
 // Default response for any other request
 app.use(function (req, res) {
