@@ -5,6 +5,7 @@ import "./Login.css";
 import { useHistory } from "react-router-dom";
 import LoginNavBar from "../layouts/LoginNavBar";
 
+
 export default function Login() {
   const history = useHistory();
   const [email, setEmail] = useState("");
@@ -16,7 +17,19 @@ export default function Login() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    history.push("/Home");
+    try {
+      const result = await axios.post('localhost:8000/admin_login', {
+        username: email,
+        password: password
+      });
+      const token = result.token;
+      localStorage.setItem("token", token);
+      history.push("/Home");
+    }
+    catch (err) {
+      console.log("[Admin Login Screen] Error Occured while sending login request.");
+      console.log(err);
+    }
   }
 
   return (
@@ -27,10 +40,10 @@ export default function Login() {
           <div className="Login">
             <Form onSubmit={handleSubmit}>
               <Form.Group size="lg" controlId="email">
-                <Form.Label>Email</Form.Label>
+                <Form.Label>Username</Form.Label>
                 <Form.Control
                   autoFocus
-                  type="email"
+                  type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -48,7 +61,6 @@ export default function Login() {
                 size="lg"
                 style={{ marginTop: 10 + "px" }}
                 type="submit"
-                disabled={!validateForm()}
               >
                 Login
               </Button>
