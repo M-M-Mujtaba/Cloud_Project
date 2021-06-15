@@ -1,11 +1,15 @@
-const sqlite3 = require('sqlite3');
+var mysql = require('mysql');
 
-// open the database
-let db = new sqlite3.Database('./EMP_DB.db', sqlite3.OPEN_READWRITE, (err) => {
-  if (err) {
-    console.error(err.message);
-  }
-  console.log('Connected to the chinook database.');
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "11970870",
+  database: "emp_att"
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
 });
 // var user_list = []
 
@@ -30,6 +34,7 @@ let db = new sqlite3.Database('./EMP_DB.db', sqlite3.OPEN_READWRITE, (err) => {
 //   console.log('Close the database connection.');
 //   //console.log(user_list)
 // });
-exports.Database = db;
+
+exports.Database = con;
 exports.today = new Date();
-console.log(this.today)
+console.log(this.today.toLocaleString().split(',')[0])
