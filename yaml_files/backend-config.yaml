@@ -20,9 +20,6 @@ spec:
           image: backend:1.0
           ports:
             - containerPort: 8000
-          volumeMounts:
-            - mountPath: /var/lib/mysql
-              name: db-volume
           resources:
             limits:
               memory: 512Mi
@@ -30,11 +27,6 @@ spec:
             requests:
               memory: 256mi
               cpu: "0.2"
-      volumes:
-        - name: db-volume
-          hostPath:
-            path: ~/Cloud_Project/db_folder
-            type: Directory
 ---
 # express backend service config starts here
 apiVersion: v1

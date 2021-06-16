@@ -6,7 +6,7 @@ metadata:
   labels:
     app: mysql-db
 spec:
-  replicas: 5
+  replicas: 1
   selector:
     matchLabels:
       app: mysql-db
@@ -26,6 +26,9 @@ spec:
                 secretKeyRef:
                   name: mysqldb-secret
                   key: mysql-root-password
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: db-volume
           resources:
             limits:
               memory: 512Mi
@@ -33,6 +36,11 @@ spec:
             requests:
               memory: 256mi
               cpu: "0.2"
+      volumes:
+        - name: db-volume
+          hostPath:
+            path: ~/Cloud_Project/db_folder
+            type: Directory
 ---
 # mysql-service config starts here
 apiVersion: v1
