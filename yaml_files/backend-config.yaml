@@ -33,7 +33,7 @@ spec:
       volumes:
         - name: db-volume
           hostPath:
-            path: /data
+            path: ~/Cloud_Project/db_folder
             type: Directory
 ---
 # express backend service config starts here
