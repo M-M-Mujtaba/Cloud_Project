@@ -7,6 +7,8 @@ metadata:
     app: mysql-db
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: mysql-db
@@ -28,7 +30,7 @@ spec:
                   key: mysql-root-password
           volumeMounts:
             - mountPath: /var/lib/mysql
-              name: db-volume
+              name: mysql-pv
           resources:
             limits:
               memory: 512Mi
@@ -37,10 +39,9 @@ spec:
               memory: 256Mi
               cpu: "0.2"
       volumes:
-        - name: db-volume
-          hostPath:
-            path: ~/Cloud_Project/db_folder
-            type: Directory
+        - name: mysql-pv
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
 ---
 # mysql-service config starts here
 apiVersion: v1
@@ -48,9 +49,11 @@ kind: Service
 metadata:
   name: mysql-db-service
 spec:
+  type: NodePort
   selector:
     app: mysql-db
   ports:
     - protocol: TCP
-      port: 8306
+      port: 3306
       targetPort: 3306
+      nodePort: 30007
