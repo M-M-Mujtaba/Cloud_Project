@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: express_backend
-          image: backend:1.0
+          image: mkhizarhussain/backend:1.0
           ports:
             - containerPort: 8000
           env:
@@ -50,9 +50,11 @@ kind: Service
 metadata:
   name: backend-service
 spec:
+  type: NodePort
   selector:
     app: express
   ports:
     - protocol: TCP
-      port: 80
+      port: 8000
       targetPort: 8000
+      nodePort: 30008
