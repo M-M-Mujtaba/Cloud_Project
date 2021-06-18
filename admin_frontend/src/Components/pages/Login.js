@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import "./Login.css";
 import { useHistory } from "react-router-dom";
 import LoginNavBar from "../layouts/LoginNavBar";
+import axios from 'axios';
 
 
 export default function Login() {
@@ -15,16 +16,18 @@ export default function Login() {
     return email.length > 0 && password.length > 0;
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     try {
-      const result = await axios.post('localhost:8000/admin_login', {
-        username: email,
-        password: password
-      });
-      const token = result.token;
-      localStorage.setItem("token", token);
-      history.push("/Home");
+      // const result = await axios.post('https://192.168.49.2:30008/admin_login', {
+      //   username: email,
+      //   password: password
+      // });
+      const result = await axios.get("http://localhost:30008/employees");
+      console.log(result);
+    //   const token = result.token;
+    //   localStorage.setItem("token", token);
+    //   history.push("/Home");
     }
     catch (err) {
       console.log("[Admin Login Screen] Error Occured while sending login request.");
