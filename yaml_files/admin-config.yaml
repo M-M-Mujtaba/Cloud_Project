@@ -1,0 +1,36 @@
+# admin frontend pod config
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-frontend
+spec:
+  selector:
+    matchLabels:
+      app: admin-frontend
+  template:
+    metadata:
+      labels:
+        app: admin-frontend
+    spec:
+      containers:
+      - name: admin-frontend
+        image: mkhizarhussain/adminfrontend
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-frontend-service
+spec:
+  type: NodePort
+  selector:
+    app: admin-frontend
+  ports:
+  - port: 3000
+    targetPort: 3000
+    nodePort: 30009

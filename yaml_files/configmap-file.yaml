@@ -4,3 +4,4 @@ metadata:
   name: backend-configs
 data:
   MYSQL_HOST_STRING: mysql-db-service
+  MYSQL_DB: emp_att

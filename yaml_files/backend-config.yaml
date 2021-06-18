@@ -26,6 +26,11 @@ spec:
                 configMapKeyRef:
                   name: backend-configs
                   key: MYSQL_HOST_STRING
+            - name: MYSQL_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-configs
+                  key: MYSQL_DB
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
@@ -52,7 +57,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app: express
+    app: express-backend
   ports:
     - protocol: TCP
       port: 8000
