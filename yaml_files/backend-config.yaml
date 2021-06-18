@@ -20,6 +20,22 @@ spec:
           image: backend:1.0
           ports:
             - containerPort: 8000
+          env:
+            - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-configs
+                  key: MYSQL_HOST_STRING
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysqldb-secret
+                  key: mysql-root-username
+            - name: MYSQL_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mysqldb-secret
+                  key: mysql-root-password
           resources:
             limits:
               memory: 512Mi
