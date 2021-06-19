@@ -251,7 +251,7 @@ app.put("/update_emp", (req, res, next) => {
 
                 });
             } else if (key == "lname") {
-                db.Database.run(`update user set lname = ? where username = ?`, [value, req.body["username"]], (err, result) => {
+                db.Database.query(`update user set lname = ? where username = ?`, [value, req.body["username"]], (err, result) => {
                     if (err) {
                         console.log(err.message);
                         res.status(400).json({ "error": err.message });
