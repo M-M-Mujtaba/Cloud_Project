@@ -5,11 +5,14 @@ import NavBar from "../layouts/navBar";
 
 const EditUser = () => {
   const { ID } = useParams();
+  let history = useHistory();
+  if(localStorage.getItem("token") === "null"){
+    history.push("/");
+  }
   console.log("outsied use effect " + ID);
 
   const [userinfo, setUserInfo] = useState({});
 
-  let history = useHistory();
   console.log(userinfo);
 
   const fetchUser = async () => {
@@ -43,7 +46,7 @@ const EditUser = () => {
       console.log(userinfo);
       const result = await axios.put("http://khdd.codes:30008/update_emp", userinfo);
       console.log(result);
-      // history.push("/Home");
+      history.push("/Home");
 
     }
     catch (err) {

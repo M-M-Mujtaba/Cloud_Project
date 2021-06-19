@@ -17,9 +17,8 @@ const NavBar = () => {
           </ul>
           <Link class="btn btn-outline-success mx-3 mr-sm-2" type="submit" onClick={(e) => {
             e.preventDefault();
-            if (localStorage.getItem("token") !== null) {
-              localStorage.setItem("token", null);
-            }
+            console.log("ihihi")
+            localStorage.setItem("token", null);
             history.push("/")
           }} to="/">Logout</Link>
         </div>

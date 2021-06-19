@@ -1,9 +1,13 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import NavBar from "../layouts/navBar";
 
 const UserList = () => {
+  const history = useHistory();
+  if(localStorage.getItem("token") === "null"){
+    history.push("/");
+  }
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -24,11 +28,11 @@ const UserList = () => {
   const deleteUser = async username => {
     try{
       console.log(username);
-      const result = await axios.delete("http://khdd.codes:30008/delete_emp",{
+      const result = await axios.post("http://khdd.codes:30008/delete_emp",{
         "username": username
       });
       console.log(result);
-      // setTimeout(fetchData, 1000);
+      setTimeout(fetchData, 1000);
     }
     catch(err){
       console.log("[Edit Users] Error occured")
@@ -60,12 +64,10 @@ const UserList = () => {
                   <td>{user.lname}</td>
                   <td>{user.username}</td>
                   <td>
-                    <Link class="btn btn-primary mr-2" to={"/UserList"}>
-                      View
-                    </Link>{"  "}
-                    <Link class="btn btn-outline-primary mr-2" to={`/EditUser/${user.username}`}>
+                    <Link class="btn btn-primary mx-3 mr-2" to={`/EditUser/${user.username}`}>
                       Edit
                     </Link>{"  "}
+      
                     <Link
                       class="btn btn-danger"
                       onClick={() => deleteUser(user.username)}

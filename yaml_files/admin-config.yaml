@@ -16,14 +16,14 @@ spec:
         app: admin-frontend
     spec:
       containers:
-      - name: admin-frontend
-        image: mkhizarhussain/adminfrontend
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
-        ports:
-        - containerPort: 5000
+        - name: admin-frontend
+          image: mkhizarhussain/adminfrontend
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
@@ -35,6 +35,6 @@ spec:
     app: admin-frontend
   ports:
     - protocol: TCP
-      port: 5000
-      targetPort: 5000
-      nodePort: 30009
+      port: 80
+      targetPort: 80
+      nodePort: 31000

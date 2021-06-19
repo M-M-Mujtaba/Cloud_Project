@@ -1,8 +1,3 @@
-FROM node:10
-EXPOSE 5000
-WORKDIR /home/node/app
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install
-COPY . .
-CMD npm start
+FROM nginx:1.17
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY build/ /usr/share/nginx/html

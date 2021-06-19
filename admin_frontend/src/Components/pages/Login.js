@@ -9,7 +9,7 @@ import axios from 'axios';
 
 export default function Login() {
   const history = useHistory();
-  if(localStorage.getItem("token") !== null){
+  if(localStorage.getItem("token") !== "null"){
     history.push("/Home");
   }
   const [email, setEmail] = useState("");
@@ -39,7 +39,7 @@ export default function Login() {
   return (
     <div>
       <LoginNavBar />
-      <div className="container">
+      <div className="container my-5">
         <div className="w-70 mx-auto shadow p-3">
           <div className="Login">
             <Form onSubmit={handleSubmit}>

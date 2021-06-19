@@ -224,12 +224,7 @@ app.post("/admin_login", (req, res, next) => {
             return
 
         }
-
-
     });
-
-
-
 });
 
 app.put("/update_emp", (req, res, next) => {
@@ -312,11 +307,11 @@ app.post("/add_emp", (req, res, next) => {
     });
 });
 
-app.delete("/delete_emp", (req, res, next) => {
+app.post("/delete_emp", (req, res, next) => {
 
 
 
-
+    console.log(req.body["username"])
     db.Database.query(`delete from user where username = ?`, [req.body["username"]], function (err, result, fields) {
         if (err) {
             res.status(400).json({ "error": err.message });

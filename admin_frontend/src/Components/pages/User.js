@@ -4,6 +4,11 @@ import { useHistory } from "react-router-dom";
 import NavBar from "../layouts/navBar";
 
 const User = () => {
+  let history = useHistory();
+
+  if(localStorage.getItem("token") === "null"){
+    history.push("/");
+  }
   const [userinfo, userState] = useState({
     fname: "",
     lname: "",
@@ -13,7 +18,6 @@ const User = () => {
     designation: "",
   });
 
-  let history = useHistory();
   // console.log(userinfo);
 
   const onUpdate = (event) => {

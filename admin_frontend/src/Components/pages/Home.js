@@ -1,4 +1,5 @@
 import React from "react";
+import {useHistory} from 'react-router-dom';
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Card from "react-bootstrap/Card";
@@ -8,6 +9,10 @@ import user from "../../Images/user.png";
 import NavBar from "../layouts/navBar";
 
 const Home = () => {
+  const history = useHistory();
+  if(localStorage.getItem("token") === "null"){
+    history.push("/");
+  }
   return (
     <div>
       <NavBar />
