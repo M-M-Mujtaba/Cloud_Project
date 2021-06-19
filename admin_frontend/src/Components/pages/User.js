@@ -46,7 +46,7 @@ const User = () => {
   return (
     <div>
       <NavBar />
-      <div className="container">
+      <div className="container my-5">
         <div className="w-70 mx-auto shadow p-4">
           <h1>ADD USER FOLL TEZZZ</h1>
           <form class="row g-3" onSubmit={(event) => onSubmit(event)}>
@@ -126,7 +126,7 @@ const User = () => {
               />
             </div>
 
-            <div className="col-12">
+            <div className="col-12 my-3">
               <button type="submit" class="btn btn-primary">
                 Add User
                 </button>

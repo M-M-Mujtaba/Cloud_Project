@@ -13,9 +13,9 @@ const Home = () => {
       <NavBar />
       <div className="container">
         <div className="py-4">
-          <h1> Home page</h1>
-          <div class="row row-cols-1 row-cols-md-3 g-4 ">
-            <div class="col">
+          <h1 className="text-center"> Home page</h1>
+          <div class="shadow row p-5">
+            <div class="col mx-5">
               <div class="card card text-center">
                 <img
                   src={add1}
@@ -38,7 +38,7 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            <div class="col">
+            <div class="col mx-5">
               <div class="card card text-center">
                 <img
                   src={user}
