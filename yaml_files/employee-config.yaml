@@ -1,0 +1,39 @@
+# deployment config
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employee-vue-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employee-vue-frontend
+  template:
+    metadata:
+      labels:
+        app: employee-vue-frontend
+    spec:
+      containers:
+        - name: employee-vue-frontend
+          image: mkhizarhussain/employeefrontend
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 80
+---
+# service config
+apiVersion: v1
+kind: Service
+metadata:
+  name: employee-frontend-service
+spec:
+  type: NodePort
+  selector:
+    app: employee-vue-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 31500
