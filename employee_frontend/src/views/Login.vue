@@ -42,7 +42,7 @@ export default {
   methods: {
     login() {
       axios
-        .post("http://localhost:8000/login", { email: this.email, password: this.password })
+        .post("http://khdd.codes:30008/user_login", { username: this.email, password: this.password })
         .then((response) => this.loginSuccessful(response))
         .catch(() => this.loginFailed());
       //this.loginSuccessful(response)
@@ -55,16 +55,21 @@ export default {
       }
 
       localStorage.token = req.data.token;
-      localStorage.uid = req.data.user.ID;
-      localStorage.type = req.data.user.EmployeeType;
+     // localStorage.uid = req.data.user.ID;
+      localStorage.type = "Salaried";
       localStorage.ismarked = 0;
-      if(req.data.user.EmployeeType === "Salaried"){
-        //console.log("Message:Checkingtype");
-        localStorage.type = 0;
-      }
-      else{
-        localStorage.type = 1;
-      }
+      localStorage.username = this.email;
+      localStorage.type = 1;
+
+      // if(req.data.user.EmployeeType === "Salaried"){
+      //   //console.log("Message:Checkingtype");
+      //   // localStorage.type = 0;
+      //   localStorage.type = 1;
+      // }
+      // else{
+      //   // localStorage.type = 1;
+      //   localStorage.type = 0;
+      // }
       console.log(localStorage.type);
       
       this.error = false;

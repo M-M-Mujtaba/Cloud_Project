@@ -19,33 +19,33 @@ export default {
     return {
       items: [],
 
-      fields: [
-        {
-          key: "Date",
-          label: "Date",
-        },
-        {
-          key: "Checkin Time",
-          label: "Time",
-        },
-        {
-          key: "Presense",
-          label: "Status",
-        },
-      ],
+      // fields: [
+      //   {
+      //     key: "Date",
+      //     label: "_Date",
+      //   },
+      //   {
+      //     key: "Checkin Time",
+      //     label: "Time",
+      //   },
+      //   {
+      //     key: "Presence",
+      //     label: "Status",
+      //   },
+      // ],
     };
   },
 
   created() {
     console.log("INside attendance history");
-    var id = localStorage.uid;
-    console.log(localStorage.uid);
+    var id = localStorage.username;
+    console.log(id);
     axios
-      .post("http://localhost:8000/Attendance", { userid: id})
+      .get(`http://khdd.codes:30008/attendance/${id}`)
       .then(
         (response) => {
-          console.log(response.data.Data);
-          this.items = response.data.Data;
+          console.log(response.data.results);
+          this.items = response.data.results;
           // console.log(this.rows)
         },
         (error) => {

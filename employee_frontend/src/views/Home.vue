@@ -94,21 +94,21 @@ export default {
       var now = new Date();
       var date =
         now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
-      // var timestamp =
-      //   now.getHours() +
-      //   ":" +
-      //   (now.getMinutes() < 10 ? "0" + now.getMinutes() : now.getMinutes()) +
-      //   ":" +
-      //   (now.getSeconds() < 10 ? "0" + now.getSeconds() : now.getSeconds());
+      var timestamp =
+        now.getHours() +
+        ":" +
+        (now.getMinutes() < 10 ? "0" + now.getMinutes() : now.getMinutes()) +
+        ":" +
+        (now.getSeconds() < 10 ? "0" + now.getSeconds() : now.getSeconds());
 
       console.log(date);
       console.log(localStorage.uid);
-      // console.log(timestamp)
+      console.log(timestamp)
       axios
-        .post("http://localhost:8000/mark", {
-          // uid: localStorage.uid,
-          // time: timestamp,
-          Date: date,
+        .put("http://khdd.codes:30008/mark_attendance", {
+          username: localStorage.username
+          //time: timestamp,
+          //Date: date,
         })
         .then((response) => {
           this.Marked = true;
@@ -120,23 +120,19 @@ export default {
 
     getattendance() {
       console.log("INSIDE GET ATTENDENCE");
-      var now = new Date();
-      var date1 =
-        now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
-      var timestamp1 =
-        now.getHours() +
-        ":" +
-        (now.getMinutes() < 10 ? "0" + now.getMinutes() : now.getMinutes()) +
-        ":" +
-        (now.getSeconds() < 10 ? "0" + now.getSeconds() : now.getSeconds());
-      console.log(date1);
-      console.log(timestamp1);
+      // var now = new Date();
+      // var date1 =
+      //   now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+      // var timestamp1 =
+      //   now.getHours() +
+      //   ":" +
+      //   (now.getMinutes() < 10 ? "0" + now.getMinutes() : now.getMinutes()) +
+      //   ":" +
+      //   (now.getSeconds() < 10 ? "0" + now.getSeconds() : now.getSeconds());
+      // console.log(date1);
+      // console.log(timestamp1);
       axios
-        .post("http://localhost:8000/getattendance", {
-          uid: localStorage.uid,
-          time: "00:00:00",
-          //Date: date1,
-        })
+        .get("http://khdd.codes:30008/start_day")
         .then((response) => {
           console.log(this.Marked);
           console.log("INSIDE GET ATTENDANCE THEN");

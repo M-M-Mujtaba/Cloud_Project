@@ -20,7 +20,7 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="ml-auto">
-          <b-nav-item to="/" size="md"></b-nav-item>
+          <b-nav-item to="/" size="md">User Name</b-nav-item>
           <b-button
             pill
             varient="outline-secondary"
@@ -38,11 +38,6 @@
 
 <script>
 export default {
-  data(){
-    return{ 
-      currusername: localStorage.username,
-    }; 
-  },
   methods:{
     logout(){
       if(localStorage.token){
