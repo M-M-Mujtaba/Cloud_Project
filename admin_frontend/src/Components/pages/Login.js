@@ -9,6 +9,9 @@ import axios from 'axios';
 
 export default function Login() {
   const history = useHistory();
+  if(localStorage.getItem("token") !== null){
+    history.push("/Home");
+  }
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -19,19 +22,17 @@ export default function Login() {
   async function handleSubmit(event) {
     event.preventDefault();
     try {
-      // const result = await axios.post('https://192.168.49.2:30008/admin_login', {
-      //   username: email,
-      //   password: password
-      // });
-      const result = await axios.get("http://localhost:30008/employees");
-      console.log(result);
-    //   const token = result.token;
-    //   localStorage.setItem("token", token);
-    //   history.push("/Home");
+      const result = await axios.post('http://khdd.codes:30008/admin_login', {
+        username: email,
+        password: password
+      });
+      const token = result.data.token;
+      localStorage.setItem("token", token);
+      history.push("/Home");
     }
     catch (err) {
       console.log("[Admin Login Screen] Error Occured while sending login request.");
-      console.log(err);
+      console.log(String(err));
     }
   }
 

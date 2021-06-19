@@ -1,12 +1,10 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import NavBar from "../layouts/navBar";
 
 const UserList = () => {
-  const [users, setUsers] = useState([{"ID": 1,
-    "firstname": "Khizar",
-    "lastname": "dumb Bitch",
-    "email": "dumhoe@gmail.com"}]);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -14,24 +12,34 @@ const UserList = () => {
 
   const fetchData = async () => {
     try {
-      const results = await axios.get("");
+      const results = await axios.get("http://khdd.codes:30008/employees");
       console.log(results);
-      setUsers(results.data);
+      setUsers(results.data.results);
     } catch (err) {
       console.log("Error: While fetching userss!!!!");
       console.log(err);
     }
   };
 
-  const deleteUser = async id => {
-    console.log(id);
-    await axios.delete("");
-    fetchData();
+  const deleteUser = async username => {
+    try{
+      console.log(username);
+      const result = await axios.delete("http://khdd.codes:30008/delete_emp",{
+        "username": username
+      });
+      console.log(result);
+      // setTimeout(fetchData, 1000);
+    }
+    catch(err){
+      console.log("[Edit Users] Error occured")
+    }
   };
 
   return (
     <div>
-      <h1> Edit User</h1>
+      <NavBar />
+      &nbsp;
+      <h1 className="text-center font-weight-bold">Edit Users</h1>
       <div className="container">
         <div className="py-4">
           <table class="table table-dark table-hover table border shadow">
@@ -46,21 +54,21 @@ const UserList = () => {
             </thead>
             <tbody>
               {users.map((user, index) => (
-                <tr>
-                  <td>{user.ID}</td>
-                  <td>{user.firstname}</td>
-                  <td>{user.lastname}</td>
-                  <td>{user.email}</td>
+                <tr key={index}>
+                  <td>{index}</td>
+                  <td>{user.fname}</td>
+                  <td>{user.lname}</td>
+                  <td>{user.username}</td>
                   <td>
                     <Link class="btn btn-primary mr-2" to={"/UserList"}>
                       View
                     </Link>{"  "}
-                    <Link class="btn btn-outline-primary mr-2" to={`/EditUser/${user.ID}`}>
+                    <Link class="btn btn-outline-primary mr-2" to={`/EditUser/${user.username}`}>
                       Edit
                     </Link>{"  "}
                     <Link
                       class="btn btn-danger"
-                      onClick={() => deleteUser(user.ID)}
+                      onClick={() => deleteUser(user.username)}
                       to={"/UserList"}
                     >
                       Delete

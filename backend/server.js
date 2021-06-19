@@ -249,9 +249,6 @@ app.put("/update_emp", (req, res, next) => {
                         return;
                     }
 
-                    //console.log(typeof result);
-                    //user_list.push(result)
-
                 });
             } else if (key == "lname") {
                 db.Database.run(`update user set lname = ? where username = ?`, [value, req.body["username"]], (err, result) => {
@@ -263,8 +260,6 @@ app.put("/update_emp", (req, res, next) => {
 
                 });
 
-
-
             } else if (key == "password") {
                 db.Database.query("update user set password = ? where username = ?", [value, req.body["username"]], function (err, result, fields) {
                     if (err) {
@@ -275,8 +270,6 @@ app.put("/update_emp", (req, res, next) => {
 
                 });
 
-
-
             } else if (key == "designation") {
                 db.Database.query("update user set designation = ? where username = ?", [value, req.body["username"]], function (err, result, fields) {
                     if (err) {
@@ -286,9 +279,6 @@ app.put("/update_emp", (req, res, next) => {
                     }
 
                 });
-
-
-
             } else if (key == "salary") {
 
                 db.Database.query("update user set salary = ? where username = ?", [value, req.body["username"]], function (err, result, fields) {
@@ -299,10 +289,6 @@ app.put("/update_emp", (req, res, next) => {
                     }
 
                 });
-
-
-
-
             }
             else {
                 res.status(400).json({ "error": "Invalid Column name" });
@@ -314,35 +300,16 @@ app.put("/update_emp", (req, res, next) => {
 
     }
     res.status(200).json({ "results": "success" })
-    //res.status(200).json({ "results": user_list});
-
-
-    //res.header("Access-Control-Allow-Origin", "*");
-
-
-    // res.json({"message":"Ok"})
 });
 app.post("/add_emp", (req, res, next) => {
     var user_list = []
-
-
-
     db.Database.query(`insert into user values(?, ?, ?, ?, ?, ?)`, [req.body["username"], req.body["password"], req.body["fname"], req.body["lname"], req.body["salary"], req.body["designation"]], function (err, result, fields) {
         if (err) {
             res.status(400).json({ "error": err.message });
             return;
         }
-
-        //console.log(typeof result);
-        //user_list.push(result)
         res.status(200).json({ "results": "success" })
     });
-    //res.status(200).json({ "results": user_list});
-
-    //res.header("Access-Control-Allow-Origin", "*");
-
-
-    // res.json({"message":"Ok"})
 });
 
 app.delete("/delete_emp", (req, res, next) => {
@@ -355,17 +322,8 @@ app.delete("/delete_emp", (req, res, next) => {
             res.status(400).json({ "error": err.message });
             return;
         }
-
-        //console.log(typeof result);
-        //user_list.push(result)
         res.status(200).json({ "results": "success" })
     });
-    //res.status(200).json({ "results": user_list});
-
-    //res.header("Access-Control-Allow-Origin", "*");
-
-
-    // res.json({"message":"Ok"})
 });
 
 // Default response for any other request
